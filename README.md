@@ -1,15 +1,31 @@
-# Payload Website Template
+# Multi-Market Multi-Brand Application
 
-This is the official [Payload Website Template](https://github.com/payloadcms/payload/blob/main/templates/website). Use it to power websites, blogs, or portfolios from small to enterprise. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
+This is a multi-market/multi-brand application built on the [Payload Website Template](https://github.com/payloadcms/payload/blob/main/templates/website). It supports Malaysia, Singapore, and Australia markets with sophisticated feature reuse and inheritance capabilities.
+
+**This application demonstrates:**
+
+- Multi-market/multi-brand architecture
+- Feature reuse and inheritance across markets
+- DRY and SOLID design principles
+- Dynamic content management with Payload CMS
+- Production-ready Next.js frontend
+
+> **📖 For detailed documentation on the Multi-Market system, see [MULTI_MARKET_SETUP.md](./MULTI_MARKET_SETUP.md)**
+> **🚀 New to this project? Start here: [QUICK_START.md](./QUICK_START.md)**
 
 This template is right for you if you are working on:
 
+- Multi-market or multi-brand applications
+- Regional content management systems
 - A personal or enterprise-grade website, blog, or portfolio
 - A content publishing platform with a fully featured publication workflow
 - Exploring the capabilities of Payload
 
 Core features:
 
+- ✨ **Multi-Market System**: Manage multiple markets (Malaysia, Singapore, Australia) with feature reuse and inheritance
+- 🔄 **Feature Reuse**: Markets can reuse headers, footers, banners, and "How It Works" from other markets
+- 🎨 **Custom Overrides**: Each market can customize or extend reused features
 - [Pre-configured Payload Config](#how-it-works)
 - [Authentication](#users-authentication)
 - [Access Control](#access-control)
@@ -54,11 +70,12 @@ git clone -n --depth=1 --filter=tree:0 https://github.com/payloadcms/payload my-
 ### Development
 
 1. First [clone the repo](#clone) if you have not done so already
-1. `cd my-project && cp .env.example .env` to copy the example environment variables
-1. `pnpm install && pnpm dev` to install dependencies and start the dev server
+1. `cd mult-market-app && cp .env.example .env` to copy the example environment variables
+1. `npm install && npm run dev` to install dependencies and start the dev server
 1. open `http://localhost:3000` to open the app in your browser
+1. **Important**: Create your first admin user, then click "Seed Database" to populate with Malaysia, Singapore, and Australia markets
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+That's it! Changes made in `./src` will be reflected in your app. For detailed multi-market setup instructions, see [QUICK_START.md](./QUICK_START.md). Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
 
 ## How it works
 
@@ -81,6 +98,10 @@ See the [Collections](https://payloadcms.com/docs/configuration/collections) doc
 - #### Pages
 
   All pages are layout builder enabled so you can generate unique layouts for each page using layout-building blocks, see [Layout Builder](#layout-builder) for more details. Pages are also draft-enabled so you can preview them before publishing them to your website, see [Draft Preview](#draft-preview) for more details.
+
+- #### Markets
+
+  The core collection for the multi-market system. Each market can have custom headers, footers, banners, and "How It Works" sections, or reuse them from other markets. Markets support powerful inheritance patterns - Singapore can reuse Malaysia's header but with a different logo, Australia can reuse Singapore's footer and add extra links. For detailed documentation, see [MULTI_MARKET_SETUP.md](./MULTI_MARKET_SETUP.md).
 
 - #### Media
 

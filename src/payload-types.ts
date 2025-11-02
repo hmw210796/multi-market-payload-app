@@ -71,6 +71,7 @@ export interface Config {
     posts: Post;
     media: Media;
     categories: Category;
+    markets: Market;
     users: User;
     redirects: Redirect;
     forms: Form;
@@ -93,6 +94,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    markets: MarketsSelect<false> | MarketsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -779,6 +781,165 @@ export interface Form {
   createdAt: string;
 }
 /**
+ * Manage markets for different regions (Malaysia, Singapore, Australia)
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markets".
+ */
+export interface Market {
+  id: number;
+  /**
+   * Display name for the market (e.g., Malaysia, Singapore, Australia)
+   */
+  name: string;
+  /**
+   * Unique code for the market (e.g., MY, SG, AU)
+   */
+  code: string;
+  /**
+   * Set this as the default market
+   */
+  isDefault?: boolean | null;
+  /**
+   * Choose whether to create a custom header or reuse from another market
+   */
+  headerType: 'custom' | 'reuse';
+  /**
+   * Select the market whose header to reuse
+   */
+  reusedHeader?: (number | null) | Market;
+  /**
+   * Upload market logo/flag
+   */
+  customLogo?: (number | null) | Media;
+  /**
+   * Custom navigation items
+   */
+  customNavItems?:
+    | {
+        label: string;
+        /**
+         * Link URL
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  ctaButton?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  /**
+   * Choose whether to create a custom footer or reuse from another market
+   */
+  footerType: 'custom' | 'reuse';
+  /**
+   * Select the market whose footer to reuse
+   */
+  reusedFooter?: (number | null) | Market;
+  /**
+   * Custom footer links
+   */
+  customFooterLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  socialMedia?: {
+    facebook?: string | null;
+    twitter?: string | null;
+    instagram?: string | null;
+    linkedin?: string | null;
+  };
+  /**
+   * Contact email or phone number
+   */
+  contactInfo?: string | null;
+  /**
+   * Additional footer links (can add to reused footer)
+   */
+  additionalFooterLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Choose whether to create a custom banner or reuse from another market
+   */
+  bannerType: 'custom' | 'reuse';
+  /**
+   * Select the market whose banner to copy
+   */
+  reusedBanner?: (number | null) | Market;
+  /**
+   * Upload banner image or video
+   */
+  customBannerMedia?: (number | null) | Media;
+  customBannerHeadline?: string | null;
+  customBannerButton?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  overrideBannerButton?: {
+    /**
+     * Override button label when reusing banner
+     */
+    label?: string | null;
+    /**
+     * Override button URL when reusing banner
+     */
+    url?: string | null;
+  };
+  /**
+   * Choose whether to create custom steps or reuse from another market
+   */
+  howItWorksType: 'custom' | 'reuse';
+  /**
+   * Select the market whose "How It Works" to reuse
+   */
+  reusedHowItWorks?: (number | null) | Market;
+  /**
+   * Custom "How It Works" steps
+   */
+  customSteps?:
+    | {
+        /**
+         * Icon name or emoji (e.g., 👤, 📦, ✨)
+         */
+        icon?: string | null;
+        title: string;
+        description: string;
+        /**
+         * Optional video to extend this step
+         */
+        video?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Extend reused steps with additional fields like videos
+   */
+  extendedSteps?:
+    | {
+        /**
+         * Index of the step to extend (0-based)
+         */
+        stepIndex: number;
+        /**
+         * Video to add to this step
+         */
+        video: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -983,6 +1144,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'markets';
+        value: number | Market;
       } | null)
     | ({
         relationTo: 'users';
@@ -1333,6 +1498,92 @@ export interface CategoriesSelect<T extends boolean = true> {
         doc?: T;
         url?: T;
         label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markets_select".
+ */
+export interface MarketsSelect<T extends boolean = true> {
+  name?: T;
+  code?: T;
+  isDefault?: T;
+  headerType?: T;
+  reusedHeader?: T;
+  customLogo?: T;
+  customNavItems?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  ctaButton?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  footerType?: T;
+  reusedFooter?: T;
+  customFooterLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  socialMedia?:
+    | T
+    | {
+        facebook?: T;
+        twitter?: T;
+        instagram?: T;
+        linkedin?: T;
+      };
+  contactInfo?: T;
+  additionalFooterLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  bannerType?: T;
+  reusedBanner?: T;
+  customBannerMedia?: T;
+  customBannerHeadline?: T;
+  customBannerButton?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  overrideBannerButton?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  howItWorksType?: T;
+  reusedHowItWorks?: T;
+  customSteps?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        video?: T;
+        id?: T;
+      };
+  extendedSteps?:
+    | T
+    | {
+        stepIndex?: T;
+        video?: T;
         id?: T;
       };
   updatedAt?: T;

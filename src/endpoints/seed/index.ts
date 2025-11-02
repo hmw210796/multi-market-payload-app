@@ -6,6 +6,7 @@ import { home } from './home'
 import { image1 } from './image-1'
 import { image2 } from './image-2'
 import { imageHero1 } from './image-hero-1'
+import { getSeedMarkets } from './markets'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
@@ -13,6 +14,7 @@ import { post3 } from './post-3'
 const collections: CollectionSlug[] = [
   'categories',
   'media',
+  'markets',
   'pages',
   'posts',
   'forms',
@@ -273,6 +275,101 @@ export const seed = async ({
       },
     }),
   ])
+
+  payload.logger.info(`— Seeding markets...`)
+
+  // Create placeholder images for market logos
+  const [malaysiaLogoBuffer, singaporeLogoBuffer, australiaLogoBuffer] = await Promise.all([
+    fetchFileByURL('https://flagcdn.com/w640/my.png'),
+    fetchFileByURL('https://flagcdn.com/w640/sg.png'),
+    fetchFileByURL('https://flagcdn.com/w640/au.png'),
+  ])
+
+  const [malaysiaLogo, singaporeLogo, australiaLogo] = await Promise.all([
+    payload.create({
+      collection: 'media',
+      data: {
+        alt: 'Malaysia Flag',
+      },
+      file: malaysiaLogoBuffer,
+    }),
+    payload.create({
+      collection: 'media',
+      data: {
+        alt: 'Singapore Flag',
+      },
+      file: singaporeLogoBuffer,
+    }),
+    payload.create({
+      collection: 'media',
+      data: {
+        alt: 'Australia Flag',
+      },
+      file: australiaLogoBuffer,
+    }),
+  ])
+
+  // Create banner image
+  const bannerImageBuffer = await fetchFileByURL(
+    'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-hero1.webp',
+  )
+
+  const bannerImage = await payload.create({
+    collection: 'media',
+    data: {
+      alt: 'Banner Image',
+    },
+    file: bannerImageBuffer,
+  })
+
+  // Get market seed data
+  const marketSeeds = getSeedMarkets({
+    malaysiaLogo,
+    singaporeLogo,
+    australiaLogo,
+    bannerImage,
+  })
+
+  // Create Malaysia market first
+  const malaysiaMarket = await payload.create({
+    collection: 'markets',
+    depth: 0,
+    context: {
+      disableRevalidate: true,
+    },
+    data: marketSeeds[0] as any,
+  })
+
+  // Create Singapore market (reuses Malaysia's header, banner, and howItWorks)
+  const singaporeSeed = {
+    ...marketSeeds[1],
+    reusedHeader: malaysiaMarket.id,
+    reusedBanner: malaysiaMarket.id,
+    reusedHowItWorks: malaysiaMarket.id,
+  }
+  const singaporeMarket = await payload.create({
+    collection: 'markets',
+    depth: 0,
+    context: {
+      disableRevalidate: true,
+    },
+    data: singaporeSeed as any,
+  })
+
+  // Create Australia market (reuses Singapore's footer and Malaysia's howItWorks)
+  const australiaSeed = {
+    ...marketSeeds[2],
+    reusedFooter: singaporeMarket.id,
+    reusedHowItWorks: malaysiaMarket.id,
+  }
+  await payload.create({
+    collection: 'markets',
+    depth: 0,
+    context: {
+      disableRevalidate: true,
+    },
+    data: australiaSeed as any,
+  })
 
   payload.logger.info('Seeded database successfully!')
 }
