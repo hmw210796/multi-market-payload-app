@@ -809,6 +809,10 @@ export interface Market {
    */
   reusedHeader?: (number | null) | Market;
   /**
+   * Override the logo when reusing header
+   */
+  overrideLogo?: (number | null) | Media;
+  /**
    * Upload market logo/flag
    */
   customLogo?: (number | null) | Media;
@@ -1513,6 +1517,7 @@ export interface MarketsSelect<T extends boolean = true> {
   isDefault?: T;
   headerType?: T;
   reusedHeader?: T;
+  overrideLogo?: T;
   customLogo?: T;
   customNavItems?:
     | T

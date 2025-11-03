@@ -1,26 +1,38 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
-interface Market {
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+import React, { cache } from 'react'
+
+interface MarketListItem {
   id: number
   name: string
   code: string
   updatedAt: string
 }
 
-async function getMarkets(): Promise<Market[]> {
+const getMarketsQuery = cache(async (): Promise<MarketListItem[]> => {
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.find({
+    collection: 'markets',
+    limit: 100,
+    sort: '-createdAt',
+    overrideAccess: true, // Allow public access for the markets list
+  })
+
+  return result.docs.map((market) => ({
+    id: market.id,
+    name: market.name,
+    code: market.code,
+    updatedAt: market.updatedAt,
+  }))
+})
+
+async function getMarkets(): Promise<MarketListItem[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-    const res = await fetch(`${baseUrl}/api/markets`, {
-      next: { revalidate: 3600 }, // Revalidate every hour
-    })
-
-    if (!res.ok) {
-      return []
-    }
-
-    const data = await res.json()
-    return data.success ? data.data : []
+    return await getMarketsQuery()
   } catch (error) {
     console.error('Error fetching markets:', error)
     return []
@@ -35,9 +47,7 @@ export default async function MarketsPage() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4">Available Markets</h1>
-          <p className="text-xl text-gray-600">
-            Select a market to view its features and content
-          </p>
+          <p className="text-xl text-gray-600">Select a market to view its features and content</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -78,4 +88,3 @@ export const metadata: Metadata = {
   title: 'Markets - Multi Market App',
   description: 'Browse all available markets and their features',
 }
-

@@ -1,30 +1,17 @@
-import { NextResponse } from 'next/server'
-import { getPayload } from 'payload'
 import config from '@payload-config'
+import {
+  REST_DELETE,
+  REST_GET,
+  REST_OPTIONS,
+  REST_PATCH,
+  REST_POST,
+  REST_PUT,
+} from '@payloadcms/next/routes'
 
-export async function GET() {
-  try {
-    const payload = await getPayload({ config })
-
-    // Get all markets
-    const { docs: markets } = await payload.find({
-      collection: 'markets',
-      sort: '-createdAt',
-      limit: 100,
-    })
-
-    return NextResponse.json({
-      success: true,
-      data: markets.map((market) => ({
-        id: market.id,
-        name: market.name,
-        code: market.code,
-        updatedAt: market.updatedAt,
-      })),
-    })
-  } catch (error) {
-    console.error('Error fetching markets:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-
+// Forward all methods to Payload's API handler for full CRUD support
+export const GET = REST_GET(config)
+export const POST = REST_POST(config)
+export const DELETE = REST_DELETE(config)
+export const PATCH = REST_PATCH(config)
+export const PUT = REST_PUT(config)
+export const OPTIONS = REST_OPTIONS(config)

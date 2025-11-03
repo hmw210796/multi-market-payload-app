@@ -76,6 +76,22 @@ export const Markets: CollectionConfig<'markets'> = {
                 condition: (_, siblingData) => siblingData?.headerType === 'reuse',
                 description: 'Select the market whose header to reuse',
               },
+              filterOptions: ({ id }) => {
+                return {
+                  id: {
+                    not_equals: id,
+                  },
+                }
+              },
+            },
+            {
+              name: 'overrideLogo',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                condition: (_, siblingData) => siblingData?.headerType === 'reuse',
+                description: 'Override the logo when reusing header',
+              },
             },
             {
               name: 'customLogo',
@@ -165,6 +181,13 @@ export const Markets: CollectionConfig<'markets'> = {
               admin: {
                 condition: (_, siblingData) => siblingData?.footerType === 'reuse',
                 description: 'Select the market whose footer to reuse',
+              },
+              filterOptions: ({ id }) => {
+                return {
+                  id: {
+                    not_equals: id,
+                  },
+                }
               },
             },
             {
@@ -276,6 +299,13 @@ export const Markets: CollectionConfig<'markets'> = {
                 condition: (_, siblingData) => siblingData?.bannerType === 'reuse',
                 description: 'Select the market whose banner to copy',
               },
+              filterOptions: ({ id }) => {
+                return {
+                  id: {
+                    not_equals: id,
+                  },
+                }
+              },
             },
             {
               name: 'customBannerMedia',
@@ -372,6 +402,13 @@ export const Markets: CollectionConfig<'markets'> = {
               admin: {
                 condition: (_, siblingData) => siblingData?.howItWorksType === 'reuse',
                 description: 'Select the market whose "How It Works" to reuse',
+              },
+              filterOptions: ({ id }) => {
+                return {
+                  id: {
+                    not_equals: id,
+                  },
+                }
               },
             },
             {

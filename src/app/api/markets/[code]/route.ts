@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Market } from '@/payload-types'
+import { REST_DELETE, REST_PATCH, REST_POST, REST_PUT, REST_OPTIONS } from '@payloadcms/next/routes'
 
 interface ResolvedMarketData {
   name: string
@@ -86,7 +87,12 @@ async function resolveMarketData(market: Market, payload: any): Promise<Resolved
       resolved.header = sourceHeader
 
       // Apply overrides if specified
-      if (market.customLogo) {
+      if (market.overrideLogo) {
+        if (typeof market.overrideLogo === 'object' && market.overrideLogo?.url) {
+          resolved.header.logo = market.overrideLogo.url
+        }
+      } else if (market.customLogo) {
+        // Fallback for old seed data
         if (typeof market.customLogo === 'object' && market.customLogo?.url) {
           resolved.header.logo = market.customLogo.url
         }
@@ -421,3 +427,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ code
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+
+// Forward all other methods to Payload's API handler for full CRUD support
+export const POST = REST_POST(config)
+export const PATCH = REST_PATCH(config)
+export const PUT = REST_PUT(config)
+export const DELETE = REST_DELETE(config)
+export const OPTIONS = REST_OPTIONS(config)

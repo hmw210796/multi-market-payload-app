@@ -71,7 +71,7 @@ export function getSeedMarkets(params: SeedMarketParams): Partial<Market>[] {
       isDefault: false,
       headerType: 'reuse',
       reusedHeader: null, // Will be set to Malaysia's ID during seeding
-      customLogo: singaporeLogo?.id || null,
+      overrideLogo: singaporeLogo?.id || null,
       footerType: 'custom',
       customFooterLinks: [
         { label: 'About', url: '/about' },

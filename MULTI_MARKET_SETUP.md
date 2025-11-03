@@ -25,10 +25,11 @@ The `Markets` collection is the core of the multi-market system. Each market can
 
 1. **Header Tab**
    - `headerType`: 'custom' or 'reuse'
-   - `customLogo`: Upload market logo/flag
+   - `reusedHeader`: Reference to another market's header
+   - `overrideLogo`: Override the logo when reusing header
+   - `customLogo`: Upload market logo/flag (for custom headers)
    - `customNavItems`: Array of navigation items
    - `ctaButton`: Call-to-action button
-   - `reusedHeader`: Reference to another market's header
 
 2. **Footer Tab**
    - `footerType`: 'custom' or 'reuse'
